@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Default screen margins, per design guidelines -->
+    <dimen name="default_horizontal">16dp</dimen>
+    <dimen name="default_vertical">16dp</dimen>
+    <dimen name="default_margin">16dp</dimen>
+
+    <dimen name="margin_left">16dp</dimen>
+    <dimen name="margin_right">16dp</dimen>
+    <dimen name="margin_top_bottom">8dp</dimen>
+    <dimen name="title_size_text">16sp</dimen>
+    <dimen name="card_elevation">4dp</dimen>
+    <dimen name="card_corner_radius">8dp</dimen>
+</resources>
