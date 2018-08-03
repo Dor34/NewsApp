@@ -30,7 +30,7 @@
                 tools:text="Title" />
 
             <TextView
-                android:id="@+id/source"
+                android:id="@+id/contributor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/title"
@@ -42,7 +42,7 @@
                 android:id="@+id/section"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/source"
+                android:layout_below="@id/contributor"
                 android:layout_marginLeft="@dimen/margin_left"
                 android:layout_marginRight="@dimen/margin_right"
                 tools:text="Section" />

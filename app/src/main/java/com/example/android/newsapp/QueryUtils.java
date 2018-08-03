@@ -79,7 +79,7 @@ public class QueryUtils {
                 Log.e (LOG_TAG, "Error response code: " + urlConnection.getResponseCode ());
             }
         }catch (IOException e){
-            Log.e (LOG_TAG, "Problem retrieving the earthquake JSON results.", e);
+            Log.e (LOG_TAG, "Problem retrieving the news JSON results.", e);
         }finally {
             if (urlConnection != null){
                 urlConnection.disconnect ();
@@ -125,17 +125,17 @@ public class QueryUtils {
             for (int i = 0; i<results.length (); i++){
                 JSONObject currentNewsData = results.getJSONObject (i);
 
-
-                // Extract the value for the key called "time"
+                // Extract the value for the key called "title"
                 String title = currentNewsData.getString("webTitle");
 
-                //Extract the for the key called "mag"
-                String section = currentNewsData.getString ("webSection");
+                //Extract the for the key called "sectionName"
+                String sectionName = currentNewsData.getString ("sectionName");
 
+                //Extract the value for the key called "date"
                 String date = currentNewsData.getString ("webPublicationDate");
 
                 //extract value key called "url"
-                String url = currentNewsData.getString ("url");
+                String url = currentNewsData.getString ("webUrl");
 
                 JSONArray tags = currentNewsData.getJSONArray ("tags");
                 String source = "";
@@ -148,7 +148,7 @@ public class QueryUtils {
                         source = currentSource.getString ("webTitle");
                     }
                 }
-                NewsData newsData = new NewsData (title, source, section, date, url);
+                NewsData newsData = new NewsData (title, source, sectionName, date, url);
                 news.add(newsData);
             }
             }catch (JSONException e){

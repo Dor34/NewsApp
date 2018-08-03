@@ -25,12 +25,12 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
 
     public static final String LOG_TAG = NewsActivity.class.getName();
 
-    /** URL for earthquake data from The Guardian dataset */
+    /** URL for API Guardian dataset */
     private static final String Guardian_URL =
-            "https://www.theguardian.com/world/2018/aug/01/zanu-pf-wins-majority-of-seats-in-zimbabwe-parliament-elections";
+            "https://content.guardianapis.com/search?&show-tags=contributor&api-key=8a09433d-9465-45cf-bdef-cc24b13a0e45&q=android";
 
     //Adapter for list of news articles
-    private NewsAdapter mNewsAdapter;
+    private NewsAdapter newsAdapter;
 
     //Static value for article loader
     private static final int NEWS_LOADER_ID = 1;
@@ -53,11 +53,11 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
         ListView newsListView = (ListView) findViewById(R.id.list_view);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById (R.id.refresh);
 
-        final NewsAdapter mAdapter = new NewsAdapter (this, new ArrayList<NewsData> ());
+        newsAdapter = new NewsAdapter (this, new ArrayList<NewsData> ());
 
         // Set the adapter on the {@link ListView}
         // so the list can be populated in the user interface
-        newsListView.setAdapter(mAdapter);
+        newsListView.setAdapter(newsAdapter);
 
         // Set an item click listener on the ListView, which sends an intent to a web browser
         // to open a website with more information about the selected earthquake.
@@ -66,7 +66,7 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Find the current news article that was clicked on
-                NewsData currentNews = mAdapter.getItem(position);
+                NewsData currentNews = newsAdapter.getItem(position);
 
                 // Convert the String URL into a URI object (to pass into the Intent constructor)
                 Uri newsUri = Uri.parse(currentNews.getUrl());
@@ -76,20 +76,6 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
 
                 // Send the intent to launch a new activity
                 startActivity(websiteIntent);
-            }
-        });
-
-        swipeRefreshLayout.setOnRefreshListener (new SwipeRefreshLayout.OnRefreshListener () {
-            @Override
-            public void onRefresh() {
-                swipeRefreshLayout.setRefreshing (true);
-                checkNetwork();
-                (new Handler ()).postDelayed (new Runnable () {
-                    @Override
-                    public void run() {
-                        swipeRefreshLayout.setRefreshing (false);
-                    }
-                }, 3000);
             }
         });
 
@@ -129,11 +115,11 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
         //When no articles are found
         mEmptyState.setText (R.string.no_articles);
         //Clears previous data
-        mNewsAdapter.clear ();
+        newsAdapter.clear ();
 
-        //if there articles will addt them to adapter and update listview
+        //if there are articles will add them to adapter and update listview
         if (news != null && !news.isEmpty ()){
-            mNewsAdapter.addAll (news);
+            newsAdapter.addAll (news);
         }
 
     }
@@ -141,6 +127,6 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoaderReset(Loader<List<NewsData>> loader) {
         Log.i(LOG_TAG, "onLoaderReset() called");
-        mNewsAdapter.clear ();
+        newsAdapter.clear ();
     }
 }

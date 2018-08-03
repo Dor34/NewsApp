@@ -6,7 +6,7 @@ public class NewsData {
     private String mTitle;
 
     // Source of article
-    private String mSource;
+    private String mContributor;
 
     //Section of news article
     private String mSection;
@@ -17,10 +17,10 @@ public class NewsData {
     //URL of news article
     private String mUrl;
 
-    public NewsData(String title, String source, String date, String section, String url) {
+    public NewsData(String title, String contributor, String date, String section, String url) {
 
         mTitle = title;
-        mSource = source;
+        mContributor = contributor;
         mSection = section;
         mDate = date;
         mUrl = url;
@@ -34,10 +34,10 @@ public class NewsData {
     }
 
     /**
-     * Source of article
+     * Contributor of article
      */
-    public String getSource() {
-        return mSource;
+    public String getContributor() {
+        return mContributor;
     }
 
     /**
