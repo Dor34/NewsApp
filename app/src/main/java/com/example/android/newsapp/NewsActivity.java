@@ -4,14 +4,18 @@ import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -27,7 +31,7 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
 
     /** URL for API Guardian dataset */
     private static final String Guardian_URL =
-            "https://content.guardianapis.com/search?&show-tags=contributor&api-key=8a09433d-9465-45cf-bdef-cc24b13a0e45&q=android";
+            "https://content.guardianapis.com/search";
 
     //Adapter for list of news articles
     private NewsAdapter newsAdapter;
@@ -79,6 +83,7 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         });
 
+        //Creates empty state view when no data returns
         mEmptyState = (TextView) findViewById (R.id.empty_view);
         newsListView.setEmptyView (mEmptyState);
         checkNetwork();
@@ -103,18 +108,35 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public Loader<List<NewsData>> onCreateLoader(int id, Bundle bundle) {
-        return new NewsLoader (this, Guardian_URL);
+
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences (this);
+
+        String orderBy = sharedPrefs.getString (
+                getString (R.string.settings_order_by_key),
+                getString (R.string.settings_order_by_default)
+        );
+
+        Uri baseUri = Uri.parse(Guardian_URL);
+        Uri.Builder uriBuilder = baseUri.buildUpon();
+
+        uriBuilder.appendQueryParameter("q", "search");
+        uriBuilder.appendQueryParameter("orderby", orderBy);
+        uriBuilder.appendQueryParameter("show-tags", "contributor");
+        uriBuilder.appendQueryParameter("pageSize", "20");
+        uriBuilder.appendQueryParameter ("api-key", "8a09433d-9465-45cf-bdef-cc24b13a0e45");
+
+        Log.e(LOG_TAG, uriBuilder.toString ());
+        return new NewsLoader (this, uriBuilder.toString ());
     }
 
     @Override
     public void onLoadFinished(Loader<List<NewsData>> loader, List <NewsData> news) {
         //progress is hidden when article is done loading
-        mProgressBar = (ProgressBar) findViewById (R.id.progress_bar);
+        mProgressBar = findViewById (R.id.progress_bar);
         mProgressBar.setVisibility (View.GONE);
 
         //When no articles are found
         mEmptyState.setText (R.string.no_articles);
-        //Clears previous data
         newsAdapter.clear ();
 
         //if there are articles will add them to adapter and update listview
@@ -128,5 +150,23 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoaderReset(Loader<List<NewsData>> loader) {
         Log.i(LOG_TAG, "onLoaderReset() called");
         newsAdapter.clear ();
+    }
+
+    @Override
+    //Initializes contents of activity settings menu
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater ().inflate (R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId ();
+        if (id == R.id.action_settings){
+            Intent settngsIntent = new Intent(this, NewsSettings.class);
+            startActivity (settngsIntent);
+            return true;
+        }
+        return super.onOptionsItemSelected (item);
     }
 }

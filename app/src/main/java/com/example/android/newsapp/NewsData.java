@@ -26,37 +26,22 @@ public class NewsData {
         mUrl = url;
     }
 
-    /**
-     * Title of article
-     */
     public String getTitle(){
         return mTitle;
     }
 
-    /**
-     * Contributor of article
-     */
     public String getContributor() {
         return mContributor;
     }
 
-    /**
-     * Article section
-     */
     public String getSection(){
         return mSection;
     }
 
-    /**
-     * Date article was written
-     */
     public String getDate() {
         return mDate;
     }
-
-    /**
-     * Url to website for more information about the article
-     */
+    
     public String getUrl(){
         return mUrl;
     }
